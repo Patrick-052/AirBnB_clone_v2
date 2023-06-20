@@ -56,6 +56,7 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
+        """delete values from the dictionary"""
         if obj in self.all().values() and obj is not None:
             del self.__objects[f'{obj.__class__.__name__}.{obj.id}']
             self.save()
