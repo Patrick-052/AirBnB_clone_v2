@@ -62,7 +62,6 @@ class HBNBCommand(cmd.Cmd):
                                 key, value = param.split('=')
                                 key = key.strip()
                                 value = value.strip()
-
                                 # Handle string values
                                 if value[0] == '"' and value[-1] == '"':
                                     value = value[1:-1].replace('\\"', '"')\
@@ -84,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
                                 setattr(obj, key, value)
                     obj.save()
                     print(obj.id)
-                except NameError as e:
+                except Exception as e:
                     print(f"{e}")
 
     def do_show(self, line):
