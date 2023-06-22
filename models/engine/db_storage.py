@@ -5,7 +5,7 @@ from models.base_model import Base
 from os import getenv
 import sqlalchemy
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -32,7 +32,7 @@ class DBStorage:
                                       + f"/{db}", pool_pre_ping=True)
 
         if env == "test":
-            Base.metadata.drop_all()
+            Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
         """Retrieving from the database"""
@@ -42,11 +42,13 @@ class DBStorage:
         if cls:
             inst_list += [cls]
         else:
-            inst_list += [City, Amenity, Review, State, User, Place]
+            inst_list += [City, State, User, Place, Review]
         for instance in inst_list:
             for obj in self.__session.query(instance).all():
                 key = f"{type(obj).__name__}.{obj.id}"
+                del obj.__dict__["_sa_instance_state"]
                 cls_objs[key] = obj
+        return cls_objs
 
     def new(self, obj):
         """"adding a new object for the database"""
@@ -66,5 +68,5 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
-        session = session_factory()
-        self.__session = session
+        Session = scoped_session(session_factory)
+        self.__session = Session()

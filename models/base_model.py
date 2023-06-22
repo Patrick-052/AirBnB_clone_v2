@@ -7,24 +7,29 @@ import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, DateTime
 
-Base = declarative_base()
+
+if models.storage_type == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """A base class for all hbnb models"""
-
-    id = Column(String(60), unique=True, nullable=False, primary_key=True,
-                default=str(uuid4()))
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    if models.storage_type == "db":
+        id = Column(String(60), unique=True, nullable=False, primary_key=True,
+                    default=str(uuid4()))
+        created_at = Column(DateTime, nullable=False,
+                            default=datetime.utcnow())
+        updated_at = Column(DateTime, nullable=False,
+                            default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
-            pass
-            # self.id = id
-            # self.created_at = created_at
-            # self.updated_at = updated_at
+            if models.storage_type != "db":
+                self.id = str(uuid4())
+                self.created_at = self.updated_at = datetime.utcnow()
         else:
             kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
                                                      '%Y-%m-%dT%H:%M:%S.%f')
@@ -46,10 +51,16 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        # dictionary = {}
+        # dictionary.update(self.__dict__)
+        dictionary = {
+            key: value
+            for key, value in self.__dict__.items()
+            if key != '_sa_instance_state' or models.storage_type != "db"
+        }
+        # dictionary.update({'__class__':
+        #                   (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary['__class__'] = type(self).__name__
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         return dictionary
