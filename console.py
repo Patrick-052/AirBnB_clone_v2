@@ -63,7 +63,8 @@ class HBNBCommand(cmd.Cmd):
                                 key = key.strip()
                                 value = value.strip()
                                 # Handle string values
-                                if value[0] == '"' and value[-1] == '"':
+                                if value.startswith('"') and\
+                                        value.endswith('"'):
                                     value = value[1:-1].replace('\\"', '"')\
                                             .replace('_', ' ')
 
