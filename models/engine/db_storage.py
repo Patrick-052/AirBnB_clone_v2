@@ -42,7 +42,7 @@ class DBStorage:
         if cls:
             inst_list += [cls]
         else:
-            inst_list += [City, State, User, Place, Review]
+            inst_list += [City, State, User, Place]
         for instance in inst_list:
             for obj in self.__session.query(instance).all():
                 key = f"{type(obj).__name__}.{obj.id}"
