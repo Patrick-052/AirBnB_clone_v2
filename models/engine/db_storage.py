@@ -3,7 +3,6 @@
 
 from models.base_model import Base
 from os import getenv
-import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.user import User
@@ -37,8 +36,8 @@ class DBStorage:
     def all(self, cls=None):
         """Retrieving from the database"""
 
-        inst_list = []
         cls_objs = {}
+        inst_list = []
         if cls:
             inst_list += [cls]
         else:
