@@ -3,7 +3,6 @@
 import models
 from uuid import uuid4
 from datetime import datetime
-import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 
@@ -16,7 +15,6 @@ else:
 class BaseModel:
     """A base class for all hbnb models"""
     if models.storage_type == "db":
-        # Base = declarative_base()
         id = Column(String(60), unique=True, nullable=False, primary_key=True,
                     default=str(uuid4()))
         created_at = Column(DateTime, nullable=False,
