@@ -25,4 +25,5 @@ class State(BaseModel, Base):
             the current ``State.id``
             """
             return [value for key, value in models.storage.all().items()
-                    if key.split(".")[0] == "City" and value.state_id == self.id]
+                    if key.split(".")[0] == "City"
+                    and value.state_id == self.id]
