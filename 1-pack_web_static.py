@@ -13,9 +13,9 @@ def do_pack():
     local("mkdir -p versions")
     arch_path = 'versions'
     frmt = datetime.now().strftime("%Y%m%d%H%M%S")
-    archive_name = f"web_static_{frmt}.tgz"
+    archive_name = "web_static_{}.tgz".format(frmt)
     path = os.path.join(arch_path, archive_name)
-    result = local(f"tar -czvf {path} web_static")
+    result = local("tar -czvf {} web_static".format(path))
 
     if result.failed:
         return None
