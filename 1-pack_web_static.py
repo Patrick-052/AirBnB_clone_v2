@@ -10,12 +10,12 @@ from datetime import datetime
 def do_pack():
     """function containing commands and process to generate the
        .tgz archive"""
-    try:
-        dir = local("mkdir AirBnB_clone_v2/versions", capture=True)
-        local(f"cp -r web_static/ {dir}")
-        frmt = datetime.now().strftime("%Y%m%d%H%M%S")
-        archive = local(f"tar -czvf web_static_{frmt}.tgz {dir}/.",
-                        capture=True)
-        return local(os.path.abspath(archive))
-    except FileNotFoundError:
+    local("mkdir -p versions")
+    frmt = datetime.now().strftime("%Y%m%d%H%M%S")
+    archive_name = f"web_static_{frmt}.tgz"
+    path = os.path.join("version", archive_name)
+    result = local(f"tar -czvf {path} web_static")
+
+    if result.failed:
         return None
+    return path
