@@ -11,14 +11,11 @@ def do_pack():
     """function containing commands and process to generate the
        .tgz archive"""
     local("mkdir -p versions")
-    # frmt = datetime.now().strftime("%Y%m%d%H%M%S")
-    # archive_name = f"web_static_{frmt}.tgz"
-    # path = os.path.join("version", archive_name)
-    # result = local(f"tar -czvf {path} web_static")
-    path = ("versions/web_static_{}.tgz"
-            .format(datetime.strftime(datetime.now(), "%Y%m%d%H%M%S")))
-    result = local("tar -cvzf {} web_static"
-                   .format(path))
+    arch_path = 'versions'
+    frmt = datetime.now().strftime("%Y%m%d%H%M%S")
+    archive_name = f"web_static_{frmt}.tgz"
+    path = os.path.join(arch_path, archive_name)
+    result = local(f"tar -czvf {path} web_static")
 
     if result.failed:
         return None
