@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 """Starting a Flask web application and ensuring
-   that its listening on 0.0.0.0, port 5000 and
-   displaying different strings when visiting the urls
-   also passing variables to a url"""
+   that its listening on 0.0.0.0, port 5000"""
 
 from flask import Flask
 
