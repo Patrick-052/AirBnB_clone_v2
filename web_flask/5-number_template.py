@@ -34,16 +34,7 @@ def python(text):
     return f"Python {text.replace('_', ' ')}"
 
 
-@app.route("/number/<int:n>", strict_slashes=False)
-def valid_int(n):
-    """displaying the variable if its an int"""
-    if isinstance(n, int):
-        return f"{n} is a number"
-
-
-@app.route("/number_template/<int:n>",
-
-           strict_slashes=False)
+@app.route("/number_template/<int:n>", strict_slashes=False)
 def html_int(n):
     """displaying a html page if variable is an int"""
     if isinstance(n, int):
