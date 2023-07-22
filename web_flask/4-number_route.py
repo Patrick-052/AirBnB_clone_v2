@@ -1,5 +1,5 @@
-#!usr/bin/python3
-"""starting a Flask web application and ensuring
+#!/usr/bin/python3
+"""Starting a Flask web application and ensuring
    that its listening on 0.0.0.0, port 5000"""
 
 from flask import Flask
@@ -25,10 +25,12 @@ def c(text):
     return f"C {text.replace('_', ' ')}"
 
 
-@app.route("/python/", defaults={"text": "is cool"}, strict_slashes=False)
+@app.route("/python/", defaults={"text": "is cool"},
+           strict_slashes=False)
 @app.route("/python/<text>", strict_slashes=False)
 def python(text):
-    """return value of variable to a url else return default"""
+    """return value of variable to a url else return
+    default"""
     return f"Python {text.replace('_', ' ')}"
 
 
