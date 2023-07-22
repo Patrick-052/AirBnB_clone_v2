@@ -26,12 +26,12 @@ class DBStorage:
         passwd = getenv("HBNB_MYSQL_PWD")
         db = getenv("HBNB_MYSQL_DB")
         host = getenv("HBNB_MYSQL_HOST")
-        env = getenv("HBNB_ENV")
+        # env = getenv("HBNB_ENV")
 
         self.__engine = create_engine(f"mysql+mysqldb://{user}:{passwd}@{host}"
                                       + f"/{db}", pool_pre_ping=True)
 
-        if env == "test":
+        if getenv("HBNB_MYSQL_USER") == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -70,3 +70,7 @@ class DBStorage:
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        """Doing away with the current session"""
+        self.__session.remove()
