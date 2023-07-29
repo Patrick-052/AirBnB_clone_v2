@@ -14,7 +14,6 @@ env.hosts = ['34.232.67.39', '18.233.63.201']
 def deploy():
     """creating and deploying and archive file by calling
        functions involved with those tasks"""
-
     try:
         archive_path = do_pack()
         if not archive_path:
