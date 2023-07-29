@@ -1,14 +1,29 @@
 # configuring nginx
 package { 'nginx':
-  ensure => installed,
+  ensure => present,
 }
 
-exec { 'creating directories':
-  command => 'mkdir -p /data/web_static/releases/test /data/web_static/shared',
+-> file { '/data':
+  ensure  => 'directory'
 }
 
-file { 'writing to a file':
-  path    => '/data/web_static/releases/test/index.html',
+-> file { '/data/web_static':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/releases/test':
+  ensure => 'directory'
+}
+
+-> file { '/data/web_static/shared':
+  ensure => 'directory'
+}
+
+file { '/data/web_static/releases/test/index.html':
   content =>
   "<html>
     <head>
@@ -19,15 +34,13 @@ file { 'writing to a file':
   </html>",
 }
 
-exec { 'creating a symbolic link':
-  command => 'rm -f /data/web_static/current && ln -s /data/web_static/releases/test/ /data/web_static/current',
+-> file { '/data/web_static/current':
+  ensure => 'link',
+  target => '/data/web_static/releases/test'
 }
 
-file { '/data/':
-  ensure => directory,
-  path   => '/data/',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
+-> exec { 'chown -R ubuntu:ubuntu /data/':
+  path => '/usr/bin/:/usr/local/bin/:/bin/'
 }
 
 file_line { 'append_after_pattern':
@@ -38,7 +51,6 @@ file_line { 'append_after_pattern':
   notify => Service['nginx'],
 }
 
-service { 'nginx':
-  ensure => running,
-  enable => true,
+-> exec { 'nginx restart':
+  path => '/etc/init.d/'
 }
