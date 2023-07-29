@@ -13,11 +13,11 @@ def do_deploy(archive_path):
     """Checking if archive file exists and deploying
     it to the servers"""
     if not os.path.exists(archive_path):
-       return False
+        return False
 
     filename = os.path.basename(archive_path)
     folder_name = "/data/web_static/releases/{}/".format(filename[:-4])
-   
+
     try:
         put(archive_path, "/tmp/{}".format(filename))
         run("mkdir -p {}".format(folder_name))
