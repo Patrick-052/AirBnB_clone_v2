@@ -2,12 +2,11 @@
 """Deploying code to the servers"""
 from fabric.api import sudo, put, env
 import os
-from sys import argv
 
 
 env.user = 'ubuntu'
-env.hosts = ['107.22.143.92', '54.157.181.234']
-env.key_filename = "C:\Users\12514\.ssh\id_rsa"
+env.hosts = ['34.232.67.39', '18.233.63.201']
+# env.key_filename = "path to the ssh private key"
 
 
 def do_deploy(archive_path):
@@ -15,15 +14,15 @@ def do_deploy(archive_path):
     it to the servers"""
     if not os.path.exists(archive_path):
        return False
-    
-    fl = argv[3].split("/")[-1].split(".")[-2]
-    dst = '/tmp/'
-    new_dir = '/data/web_static/releases/{}'.format(fl)
-    put(archive_path, dst)
-    sudo("tar -xzvf {}/{}.tgz -C {}".format(dst, fl, new_dir))
-    sudo("rm {}/{}.tgz".format(dst, fl))
-    sudo ("rm /data/web_static/current")
-    sudo("ln -s {} /data/web_static/current".format(new_dir))
 
+    filename = os.path.basename(archive_path)
+    folder_name = "/data/web_static/releases/" + filename[:-4]
+    put(archive_path, "/tmp/")
+    sudo("mkdir -p {}".format(folder_name))
+    sudo("tar -xzvf /tmp/{} -C {}".format(filename, folder_name))
+    sudo("rm -f /tmp/{}".format(filename))
+    sudo("rm -rf /data/web_static/current")
+    sudo("ln -s {} /data/web_static/current".format(folder_name))
+    
     return True
 
